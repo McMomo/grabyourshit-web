@@ -1,41 +1,39 @@
 <script>
 	import Navigation from './Components/Navigation.svelte'
-	export let name
+	import Station from './Pages/Station.svelte'
 </script>
 
 <main>
+	<div class='background'>
+		<img src='../assets/background.svg' alt='the half of a orange circle'/>
+	</div>
 	<Navigation />
-	<div class='background' />
+	<Station />
 </main>
 
-<style>
+<style type="text/scss">
 	main {
 		text-align: center;
 		padding: 0;
-		max-width: 240px;
 		margin: 0 auto;
 
 		height: 100%;
-
-		background: linear-gradient(14deg, transparent 50%, var(--beige) 50%);
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
+		overflow: scroll;
+		overflow-x: hidden;
 	}
 
 	.background {
 		position: absolute;
+		z-index: -1;
 		height: 100%;
 		width: 100%;
-	}
+		/*background: var(--beige);*/
 
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
+		img {
+			width: 100%;
+			max-height: 50%;
+			object-position: bottom;
+			object-fit: cover;
 		}
 	}
 </style>

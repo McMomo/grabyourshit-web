@@ -7,6 +7,7 @@
     "start": "sirv public"
   },
   "devDependencies": {
+    "@anoram/leaflet-svelte": "^0.0.7-1",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
     "node-sass": "^5.0.0",

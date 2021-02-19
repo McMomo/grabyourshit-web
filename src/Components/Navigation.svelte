@@ -10,6 +10,7 @@
 		place-content: center;
 	
 		height: 4em;
+		padding: 8px;
 
 		img {
 			height: 4em;

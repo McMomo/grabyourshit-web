@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@anoram/leaflet-svelte@^0.0.7-1":
+  version "0.0.7-1"
+  resolved "https://registry.yarnpkg.com/@anoram/leaflet-svelte/-/leaflet-svelte-0.0.7-1.tgz#0f016644a01c297bb6814b5a0cb1adce36ebeff2"
+  integrity sha512-vHOC2Qozp0JEGpHAaVvx72UANCj5Xk4GQ3eqFOlndpx7csi7t+OTbc4N5H+mcoYQyRcmS+NF1Q1TIU0wkwqwLw==
+  dependencies:
+    "@beyonk/async-script-loader" "^2.0.0"
+
 "@babel/code-frame@^7.10.4":
   version "7.12.13"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.12.13.tgz#dcfc826beef65e75c50e21d3837d7d95798dd658"
@@ -22,6 +29,11 @@
     "@babel/helper-validator-identifier" "^7.12.11"
     chalk "^2.0.0"
     js-tokens "^4.0.0"
+
+"@beyonk/async-script-loader@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@beyonk/async-script-loader/-/async-script-loader-2.0.0.tgz#d8867e5cdf6ecd0e8cc06da06a8a5fb2a405f59f"
+  integrity sha512-OAhcycCXwSVsSMjJGAENz0qtrALW943IRbIGZRnJZBA2aO/BDdWuHY1gF/9l+dZITAEu/wAkwhMqtXNeqmW1rw==
 
 "@polka/url@^1.0.0-next.9":
   version "1.0.0-next.11"
