@@ -5,7 +5,7 @@
 
 <main>
 	<div class='background'>
-		<img src='../assets/background.svg' alt='the half of a orange circle'/>
+		<img src='../assets/background-02.svg' alt='the half of a orange circle'/>
 	</div>
 	<Navigation />
 	<Station />
@@ -30,10 +30,10 @@
 		/*background: var(--beige);*/
 
 		img {
-			width: 100%;
-			max-height: 50%;
-			object-position: bottom;
+			object-position: top;
 			object-fit: cover;
+			height: 100%;
+			width: 100%;
 		}
 	}
 </style>

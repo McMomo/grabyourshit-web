@@ -3,20 +3,37 @@
 	import Map from '@anoram/leaflet-svelte'
 
 	const API_URL = 'https://grabyourshit-api-oi5fqfguqq-ey.a.run.app'
-	let isEmpty = true;
-
+	const urlParams = new URLSearchParams(window.location.search)
+	const stationID = urlParams.get('station')
+	
+	let isFilled = false;
+	let isLoading = false;
+	let mapOptions
 	let station = undefined
 
-	const getStation = async () => {
-		const urlParams = new URLSearchParams(window.location.search);
-		const stationID = urlParams.get('station');
+	const getStation = async (stationID) => {
 		if (stationID){
 			await fetch(`${API_URL}/stations/${stationID}`)
 				.then((res) => res.json())
 				.then((json) => {
 					station = json
 				})
-				.catch((err) => console.error('Something went wrong fechting a station' + err))
+				.catch((err) => console.error('catch error on GET' + err))
+		}
+	}
+
+	const patchStation = async (stationID) => {
+		if (stationID) {
+			isLoading = true
+			await fetch(`${API_URL}/stations/${stationID}?fill=false`, {
+				method: 'PATCH'
+			})
+			.then((res) => res.json())
+			.then((json) => {
+				console.log(json)
+				isLoading = false
+			})
+			.catch((err) => console.error('catch error on PATCH' + err))
 		}
 	}
 
@@ -39,18 +56,25 @@
 				{
 					lat: lat,
 					lng: lng,
+					icon: {
+			          iconUrl: '../assets/icons/marker.svg',
+			          iconSize: [40, 50],
+	        		},
 				}
 			],
 			mapID: 'stationMap'
 		}
 	}
 
-	getStation()
+	getStation(stationID)
 
-	let mapOptions;
+	
 
 	$: if (station){
-		mapOptions = setMapOptions(station?.location)
+		console.log(isFilled)
+		isFilled = station.isFilled;
+		console.log(isFilled, station.isFilled)
+		mapOptions = setMapOptions(station.location)
 	}
 
 </script>
@@ -62,13 +86,30 @@
 		<div class='map' transition:fade>
 			<Map options={mapOptions} />
 		</div>
-		<p>
-			Möchtest du die Station, mit der Adresse <span>{getAddress(station.nearestAddress)}</span>, als leer melden? Dadurch werden wir benachrichtigt und können die Station wieder befüllen.
-		</p>
-		<button disabled={isEmpty}>Station als leer melden</button>
-		<p>
-			Du kennst uns noch nicht? <a href='/'>Hier kannst du herrausfinden was und warum.</a>
-		</p>
+
+		<div class='board'>
+			{#if isLoading}
+				<img src='../assets/pulse-1s-200px.svg' alt='loading animation' transition:fade>
+			{:else if station}
+				<p>
+					<span>{getAddress(station.nearestAddress)}</span>
+				</p>
+				<!-- TODO WHY IS THIS NOT REACTIVE ??? -->
+				{#if station.isFilled}
+					<p>
+						Möchtest du die Station als leer melden? Dadurch werden wir benachrichtigt und können die Station wieder befüllen. 🐶
+					</p>
+				{:else}
+					<p>
+						Die Station wurde bereits als leer gemeldet. Danke für deine Mithilfe! 🐶
+					</p>
+				{/if}
+				<button disabled={!station.isFilled} on:click={() => patchStation(stationID)}>Station als leer melden</button>
+				<p>
+					Du kennst uns noch nicht? <a href='/'>Hier kannst du herrausfinden was und warum.</a>
+				</p>
+			{/if}
+		</div>
 	{/if}
 </section>
 
@@ -79,13 +120,15 @@
 		h2 {
 			color: var(--brown);
 			text-transform: uppercase;
+			margin: 0;
 		}
 		
 		p {
-			text-align: left;
+			text-align: center;
 
 			span {
 				color: var(--red);
+				text-transform: uppercase;
 			}
 		}
 
@@ -94,6 +137,17 @@
 			background-color: var(--red);
 			border: none;
 			border-radius: 5px;
+
+			&:disabled{
+				background-color: var(--brown) !important;
+				color: var(--beige) !important;
+				text-decoration:line-through;
+			}
+
+			&:hover{
+				background-color: var(--yellow);
+				color: var(--red);
+			}
 		}
 
 		a {
@@ -106,12 +160,39 @@
 	}
 
 	.map {
-    	height: 400px;
+    	height: 250px;
     	width: auto;
-  		place-content: center;
-  		background-color: #e0dfdf;
+    	margin: 8px;
 
-  		border: solid 1px var(--beige);
-  		border-radius: 5px;
+  		background-color: #e0dfdf;  		
+  		border-radius: 10px;
+  		overflow: hidden;
   	}
+
+  	.board {
+  		background-color: var(--beige);
+  		border-radius: 10px;
+
+  		margin: 8px;
+		padding: 4px;
+  	}
+
+  	@media (min-width: 720px) {
+  		.station {
+	  		h2 {
+	  			margin: 16px;
+	  		}
+  		}
+
+ 		.map {
+ 			max-width: 50%;
+ 			margin: auto;
+ 		}
+
+ 		.board {
+ 			max-width: 50%;
+ 			margin: 16px auto;
+ 			padding: 8px;
+ 		}
+	}
 </style>
