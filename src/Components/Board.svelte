@@ -24,6 +24,7 @@
 
   	.isRow {
   		flex-direction: row !important;
+  		place-content: center;
   	}
 
   	@media (min-width: 720px) {

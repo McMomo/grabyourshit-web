@@ -13,7 +13,7 @@
 	<h1 transition:fade>Willkommen bei <span>grab your shit!</span></h1>
 
 	<Board isRow={true}>
-		<div>
+		<div class='home'>
 			<h2>
 				Saubere Städte
 			</h2>
@@ -90,15 +90,12 @@
 		}
 	}
 
+	.home {
+		max-width: 300px;
+	}
+
   	.lifecycle {
   		height: 50vh;
-  		margin: -15px;
   		filter: invert(42%) sepia(72%) saturate(1687%) hue-rotate(334deg) brightness(94%) contrast(98%);
   	}
-
-  	@media (min-width: 720px) {
-  		.lifecycle {
-  			margin: 0 5%;
-  		}
-	}
 </style>
