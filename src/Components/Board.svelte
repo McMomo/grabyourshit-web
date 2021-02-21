@@ -1,8 +1,10 @@
 <script>
 	import { fade } from 'svelte/transition'
+
+	export let isRow = false
 </script>
 
-<div class='board' transition:fade>
+<div class:isRow class='board' transition:fade>
 	<slot></slot>
 </div>
 
@@ -11,12 +13,17 @@
 		display: flex;
 		flex-direction: column;
 		place-items: center;
+		position: relative;
 
   		background-color: var(--beige);
   		border-radius: 10px;
 
   		margin: 8px;
 		padding: 4px;
+  	}
+
+  	.isRow {
+  		flex-direction: row !important;
   	}
 
   	@media (min-width: 720px) {

@@ -13,13 +13,4 @@
 		text-transform: uppercase;
 		margin: 8px;
 	}
-
-	p {
-		text-align: center;
-
-		span {
-			color: var(--red);
-			text-transform: uppercase;
-		}
-	}
 </style>

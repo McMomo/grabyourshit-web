@@ -12,7 +12,18 @@
 <section>
 	<h1 transition:fade>Willkommen bei <span>grab your shit!</span></h1>
 
-	<Board>
+	<Board isRow={true}>
+		<div>
+			<h2>
+				Saubere Städte
+			</h2>
+			<p>	
+				Das Ziel von <span>grab your shit</span> ist, die Innenstädte von Hunde-Kot zu befreien.
+			</p>
+			<p>
+				Dadurch erhalten nicht nur wir Zweibeiner eine bessere Lebensqualität, sondern auch unsere vierbeinigen Freunde, da viele Krankheiten über den Kot übertragen werden.
+			</p>
+		</div>
 		<img class='lifecycle' src='../assets/gys-lifecycle.svg' alt='grab your shit lifecycle - a paw which is grabing poop with a plastic bag'/>
 	</Board>
 
@@ -27,7 +38,7 @@
 				{#each stations as station}
 					{#if station.nearestAddress}
 						<li>			
-							📍 <a href='#/station/{station.id}'>{getAddress(station.nearestAddress)}</a>
+							<a href='#/station/{station.id}'>{getAddress(station.nearestAddress)}</a>
 						</li>
 					{/if}
 				{/each}
@@ -50,6 +61,21 @@
 		}
 	}
 
+	h2 {
+		font-size: 1.25em;
+	}
+
+	p {
+		color: var(--brown);
+		margin: 8px;
+		text-align: justify;
+
+		span {
+			text-transform: uppercase;
+			color: var(--red);
+		}
+	}
+
 	ul {
 		list-style: none;
 		text-align: left;
@@ -57,15 +83,22 @@
 	}
 
 	li {
-		margin: 0.5em;
+		margin: 0.75em 0;
+
+		&:before{
+			content: '📍 ';
+		}
 	}
 
   	.lifecycle {
-  		height: 75vh;
+  		height: 50vh;
+  		margin: -15px;
   		filter: invert(42%) sepia(72%) saturate(1687%) hue-rotate(334deg) brightness(94%) contrast(98%);
   	}
 
   	@media (min-width: 720px) {
-
+  		.lifecycle {
+  			margin: 0 5%;
+  		}
 	}
 </style>
