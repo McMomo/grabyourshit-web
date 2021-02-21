@@ -35,6 +35,7 @@
 		height: 100%;
 		overflow: scroll;
 		overflow-x: hidden;
+		-webkit-overflow-scrolling: touch;
 	}
 
 	.background {

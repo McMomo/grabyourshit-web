@@ -1,0 +1,20 @@
+{
+    "name": "Grab your Shit",
+    "short_name": "Grab your Shit",
+    "icons": [
+        {
+            "src": "assets/pwa/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/pwa/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#f4e6cd",
+    "background_color": "#f4e6cd",
+    "start_url": "http://grabyourshit.de/#/",
+    "display": "standalone"
+}
