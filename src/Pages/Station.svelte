@@ -71,7 +71,7 @@
 	getStation(stationID)
 
 	$: if (station){
-		isFilled = station.isFilled === 'true'
+		isFilled = station.isFilled
 		address = getAddress(station?.nearestAddress)
 		mapOptions = setMapOptions(station.location)
 	}
@@ -153,7 +153,6 @@
  			max-width: 50%;
  			height: 50vh;
  			margin: auto;
- 			padding: 8px;
  		}
 	}
 </style>

@@ -37,7 +37,7 @@
 			{#await fetch(`${Constants.API_URL}/stations/${params.id}`).then((value) => value.json()).then((json) => json)}
 				<img src='../assets/pulse-1s-200px.svg' alt='loading animation' transition:fade>
 			{:then station}
-				{#if station.isFilled === 'true' && !isLoading}
+				{#if station.isFilled && !isLoading}
 					<h3>Die Station wurde bereits aufgefüllt ✅</h3>
 					<p>Trotzdem danke für deine Angagement. Wir zählen weiterhin auf deine Unterstützung!</p>
 				{:else if isLoading}
