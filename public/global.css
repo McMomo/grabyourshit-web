@@ -21,7 +21,7 @@ body {
 }
 
 a {
-	color: rgb(0,100,200);
+	color: var(--red);
 	text-decoration: none;
 }
 
@@ -30,7 +30,7 @@ a:hover {
 }
 
 a:visited {
-	color: rgb(0,80,160);
+	color: var(--brown);
 }
 
 label {
@@ -53,19 +53,26 @@ input:disabled {
 }
 
 button {
-	color: #333;
-	background-color: #f4f4f4;
+	color: var(--beige);
+	background-color: var(--red);
+	border: none;
+	border-radius: 5px;
 	outline: none;
 }
 
 button:disabled {
-	color: #999;
+	background-color: var(--yellow) !important;
+	color: var(--beige) !important;
+	text-decoration:line-through;
 }
 
 button:not(:disabled):active {
 	background-color: #ddd;
 }
 
-button:focus {
-	border-color: #666;
+button:focus, button:hover{
+	background-color: var(--yellow);
+	color: var(--red);
 }
+
+

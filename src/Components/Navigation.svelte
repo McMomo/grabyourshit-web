@@ -1,5 +1,5 @@
 <nav class='navigation'>
-	<a href='/'><img src='../assets/icons/grabyourshit-icon-05.svg' alt='Pfote in Tüte'/></a>
+	<a href='#/'><img src='../assets/icons/grabyourshit-icon-021.svg' alt='Pfote in Tüte'/></a>
 	<slot></slot>
 </nav>
 

@@ -2,18 +2,29 @@
 	import { fade } from 'svelte/transition'
 	import Map from '@anoram/leaflet-svelte'
 
-	const API_URL = 'https://grabyourshit-api-oi5fqfguqq-ey.a.run.app'
-	const urlParams = new URLSearchParams(window.location.search)
-	const stationID = urlParams.get('station')
+	import Board from '../Components/Board.svelte'
+	import Thanks from '../Components/Thanks.svelte'
+
+	import { getAddress, getGPS } from '../misc'
+	import Constants from '../config'
+
+	//for svelte spa router
+	export let params = {}
+
+	const stationID = params.id
 	
-	let isFilled = false;
-	let isLoading = false;
-	let mapOptions
 	let station = undefined
+
+	let isFilled = false
+	let isLoading = false
+	let isFinished = false
+	
+	let address = ''
+	let mapOptions
 
 	const getStation = async (stationID) => {
 		if (stationID){
-			await fetch(`${API_URL}/stations/${stationID}`)
+			await fetch(`${Constants.API_URL}/stations/${stationID}`)
 				.then((res) => res.json())
 				.then((json) => {
 					station = json
@@ -22,29 +33,20 @@
 		}
 	}
 
-	const patchStation = async (stationID) => {
+	const patchStation = async (stationID, fill) => {
 		if (stationID) {
 			isLoading = true
-			await fetch(`${API_URL}/stations/${stationID}?fill=false`, {
+			await fetch(`${Constants.API_URL}/stations/${stationID}?fill=${fill}`, {
 				method: 'PATCH'
 			})
 			.then((res) => res.json())
 			.then((json) => {
 				console.log(json)
 				isLoading = false
+				isFinished = true
 			})
 			.catch((err) => console.error('catch error on PATCH' + err))
 		}
-	}
-
-	const getAddress = ({street, zip, city}) => {
-		return `${street} in ${city} (${zip})`
-	}
-
-	const getGPS = (location) => {
-		let gps = []
-		location.forEach((x) => gps.push(x.split('°')[0]))
-		return gps
 	}
 
 	const setMapOptions = (location) => {
@@ -68,34 +70,32 @@
 
 	getStation(stationID)
 
-	
-
 	$: if (station){
-		console.log(isFilled)
-		isFilled = station.isFilled;
-		console.log(isFilled, station.isFilled)
+		isFilled = station.isFilled === 'true'
+		address = getAddress(station?.nearestAddress)
 		mapOptions = setMapOptions(station.location)
 	}
-
 </script>
 
 <section class='station' transition:fade>
-	{#if station}
 		<h2>Ist die Station leer?</h2>
 		<!-- a map should be here -->
 		<div class='map' transition:fade>
-			<Map options={mapOptions} />
+			{#if station}
+				<Map options={mapOptions} />
+			{/if}
 		</div>
 
-		<div class='board'>
+		<Board>
 			{#if isLoading}
 				<img src='../assets/pulse-1s-200px.svg' alt='loading animation' transition:fade>
-			{:else if station}
+			{:else if isFinished}
+				<Thanks />
+			{:else}
 				<p>
-					<span>{getAddress(station.nearestAddress)}</span>
+					<span>{address}</span>
 				</p>
-				<!-- TODO WHY IS THIS NOT REACTIVE ??? -->
-				{#if station.isFilled}
+				{#if isFilled}
 					<p>
 						Möchtest du die Station als leer melden? Dadurch werden wir benachrichtigt und können die Station wieder befüllen. 🐶
 					</p>
@@ -104,13 +104,12 @@
 						Die Station wurde bereits als leer gemeldet. Danke für deine Mithilfe! 🐶
 					</p>
 				{/if}
-				<button disabled={!station.isFilled} on:click={() => patchStation(stationID)}>Station als leer melden</button>
+				<button disabled={ !isFilled } on:click={() => patchStation(stationID, false)}>Station als leer melden</button>
 				<p>
-					Du kennst uns noch nicht? <a href='/'>Hier kannst du herrausfinden was und warum.</a>
+					Du kennst uns noch nicht? <a href='#/'>Hier kannst du herrausfinden was und warum.</a>
 				</p>
 			{/if}
-		</div>
-	{/if}
+		</Board>
 </section>
 
 <style type="text/scss">
@@ -131,32 +130,6 @@
 				text-transform: uppercase;
 			}
 		}
-
-		button {
-			color: var(--beige);
-			background-color: var(--red);
-			border: none;
-			border-radius: 5px;
-
-			&:disabled{
-				background-color: var(--brown) !important;
-				color: var(--beige) !important;
-				text-decoration:line-through;
-			}
-
-			&:hover{
-				background-color: var(--yellow);
-				color: var(--red);
-			}
-		}
-
-		a {
-			color: var(--red);
-			
-			&:visited{
-				color: var(--brown);
-			}
-		}
 	}
 
 	.map {
@@ -164,17 +137,9 @@
     	width: auto;
     	margin: 8px;
 
-  		background-color: #e0dfdf;  		
+  		background-color: var(--beige);  		
   		border-radius: 10px;
   		overflow: hidden;
-  	}
-
-  	.board {
-  		background-color: var(--beige);
-  		border-radius: 10px;
-
-  		margin: 8px;
-		padding: 4px;
   	}
 
   	@media (min-width: 720px) {
@@ -186,12 +151,8 @@
 
  		.map {
  			max-width: 50%;
+ 			height: 50vh;
  			margin: auto;
- 		}
-
- 		.board {
- 			max-width: 50%;
- 			margin: 16px auto;
  			padding: 8px;
  		}
 	}
