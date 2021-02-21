@@ -33,6 +33,7 @@
 		margin: 0 auto;
 
 		height: 100%;
+		min-width: 280px;
 		overflow: scroll;
 		overflow-x: hidden;
 		-webkit-overflow-scrolling: touch;
