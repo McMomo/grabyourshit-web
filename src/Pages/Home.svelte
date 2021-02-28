@@ -68,7 +68,7 @@
 	p {
 		color: var(--brown);
 		margin: 8px;
-		text-align: justify;
+		text-align: start;
 
 		span {
 			text-transform: uppercase;

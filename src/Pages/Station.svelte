@@ -134,8 +134,8 @@
 
 	.map {
     	height: 250px;
-    	width: auto;
-    	margin: 8px;
+    	width: 100%;
+    	margin: 0;
 
   		background-color: var(--beige);  		
   		border-radius: 10px;
@@ -150,7 +150,7 @@
   		}
 
  		.map {
- 			max-width: 50%;
+ 			// max-width: 50%;
  			height: 50vh;
  			margin: auto;
  		}

@@ -20,6 +20,13 @@
 
   		margin: 8px;
 		padding: 4px;
+
+		box-shadow:
+		  0 4.2px 3.6px rgba(0, 0, 0, 0.02),
+		  0 12.2px 10px rgba(0, 0, 0, 0.032),
+		  0 31.1px 24.1px rgba(0, 0, 0, 0.044),
+		  0 100px 80px rgba(0, 0, 0, 0.07)
+		;
   	}
 
   	.isRow {
