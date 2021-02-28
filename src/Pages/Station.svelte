@@ -79,7 +79,7 @@
 
 <section class='station' transition:fade>
 		<h2>Ist die Station leer?</h2>
-		<!-- a map should be here -->
+
 		<div class='map' transition:fade>
 			{#if station}
 				<Map options={mapOptions} />
