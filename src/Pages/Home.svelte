@@ -79,7 +79,7 @@
 	ul {
 		list-style: none;
 		text-align: left;
-		padding: 0;
+		padding: 0 8px;
 	}
 
 	li {
@@ -90,12 +90,18 @@
 		}
 	}
 
+	img {
+		height: 10rem;
+	}
+
 	.home {
 		max-width: 300px;
+		place-self: center;
 	}
 
   	.lifecycle {
-  		height: 50vh;
+  		height: 50vh !important;
   		filter: invert(42%) sepia(72%) saturate(1687%) hue-rotate(334deg) brightness(94%) contrast(98%);
   	}
+
 </style>

@@ -2,6 +2,7 @@
 	import { fade } from 'svelte/transition'
 
 	import Board from '../Components/Board.svelte'
+	import Map from '../Components/Map.svelte'
 	import Thanks from '../Components/Thanks.svelte'
 
 	import { getAddress } from '../misc'
@@ -54,22 +55,23 @@
 
 <section>
 	<h2>Hallo lieber Supporter 🐶!</h2>
-	<Board>
-		{#if isFinished}
-			<Thanks />
-		{:else}
-			{#await fetch(`${Constants.API_URL}/stations/${params.id}`).then((value) => value.json()).then((json) => json)}
-				<img src='../assets/pulse-1s-200px.svg' alt='loading animation' transition:fade>
-			{:then station}
-
-				<!-- Add map here -->
-
+		{#await fetch(`${Constants.API_URL}/stations/${params.id}`).then((value) => value.json()).then((json) => json)}
+			<Board>
+				<img src='../assets/pulse-1s-200px.svg' alt='loading animation' transition:fade />
+			</Board>
+		{:then station}
+			<Board>
+				<Map gpsLocation={station.location}/>
+			</Board>
+			<Board>
 				{#if $isAuthenticated}
 					{#if station.isFilled && !isLoading}
 						<h3>Die Station wurde bereits aufgefüllt ✅</h3>
 						<p>Trotzdem danke für deine Angagement. Wir zählen weiterhin auf deine Unterstützung!</p>
 					{:else if isLoading}
 						<img src='../assets/pulse-1s-200px.svg' alt='loading animation' transition:fade>
+					{:else if isFinished}
+						<Thanks />
 					{:else}
 						<h3>Du hast die Station <span>{getAddress(station.nearestAddress)}</span> aufgefüllt?</h3>
 						<p>Bitte klicke nur auf den Button, falls du die Station schon aufgefüllt hast, danke!</p>
@@ -83,13 +85,14 @@
 		            	Log In 🔑
 					</button>
 				{/if}
-			{:catch}
+			</Board>
+		{:catch}
+			<Board>
 				<p>
 					Leider könnte die Station aktuell nicht geladen werden 😢. Versuche es doch später erneut ☀️!
 				</p>
-			{/await}
-		{/if}	
-	</Board>
+			</Board>
+		{/await}
 </section>
 
 
@@ -105,5 +108,9 @@
 			color: var(--red);
 			text-transform: uppercase;
 		}
+	}
+
+	img {
+		height: 10rem;
 	}
 </style>

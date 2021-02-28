@@ -12,7 +12,7 @@
 	.board {
 		display: flex;
 		flex-direction: column;
-		place-items: center;
+		place-content: center;
 		position: relative;
 
   		background-color: var(--beige);
@@ -20,6 +20,7 @@
 
   		margin: 8px;
 		padding: 4px;
+		min-height: 200px;
 
 		box-shadow:
 		  0 4.2px 3.6px rgba(0, 0, 0, 0.02),

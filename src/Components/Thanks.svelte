@@ -1,8 +1,18 @@
+<script>
+	import { fade } from 'svelte/transition'
+</script>
 
-<img src='../assets/icons/treats.svg' alt='dog treat as thank you'/>
-<h2>Danke für deine Unterstützung!</h2>
+<div transition:fade>
+	<img src='../assets/icons/treats.svg' alt='dog treat as thank you'/>
+	<h2>Danke für deine Unterstützung!</h2>
+</div>
 
 <style type="text/scss">
+	div {
+		display: grid;
+		place-items: center;
+	}
+
 	img {
 		height: 6em;
 		margin: 8px;

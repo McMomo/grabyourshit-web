@@ -1,8 +1,8 @@
 <script>
 	import { fade } from 'svelte/transition'
-	import Map from '@anoram/leaflet-svelte'
 
 	import Board from '../Components/Board.svelte'
+	import Map from '../Components/Map.svelte'
 	import Thanks from '../Components/Thanks.svelte'
 
 	import { getAddress, getGPS } from '../misc'
@@ -20,7 +20,6 @@
 	let isFinished = false
 	
 	let address = ''
-	let mapOptions
 
 	const getStation = async (stationID) => {
 		if (stationID){
@@ -49,67 +48,45 @@
 		}
 	}
 
-	const setMapOptions = (location) => {
-		const [lat, lng] = getGPS(location)
-		return {
-			zoom: 17,
-			center: [lat, lng],
-			markers: [
-				{
-					lat: lat,
-					lng: lng,
-					icon: {
-			          iconUrl: '../assets/icons/marker.svg',
-			          iconSize: [40, 50],
-	        		},
-				}
-			],
-			mapID: 'stationMap'
-		}
-	}
-
 	getStation(stationID)
 
 	$: if (station){
 		isFilled = station.isFilled
 		address = getAddress(station?.nearestAddress)
-		mapOptions = setMapOptions(station.location)
 	}
 </script>
 
 <section class='station' transition:fade>
-		<h2>Ist die Station leer?</h2>
-
-		<div class='map' transition:fade>
-			{#if station}
-				<Map options={mapOptions} />
-			{/if}
-		</div>
-
-		<Board>
-			{#if isLoading}
-				<img src='../assets/pulse-1s-200px.svg' alt='loading animation' transition:fade>
-			{:else if isFinished}
-				<Thanks />
+	<h2>Ist die Station leer?</h2>
+	<Board>
+		{#if station}
+			<Map gpsLocation={station.location}/>
+		{/if}
+	</Board>
+	<Board>
+		{#if isLoading}
+			<img src='../assets/pulse-1s-200px.svg' alt='loading animation' transition:fade>
+		{:else if isFinished}
+			<Thanks />
+		{:else}
+			<p>
+				<span>{address}</span>
+			</p>
+			{#if isFilled}
+				<p>
+					Möchtest du die Station als leer melden? Dadurch werden wir benachrichtigt und können die Station wieder befüllen. 🐶
+				</p>
 			{:else}
 				<p>
-					<span>{address}</span>
-				</p>
-				{#if isFilled}
-					<p>
-						Möchtest du die Station als leer melden? Dadurch werden wir benachrichtigt und können die Station wieder befüllen. 🐶
-					</p>
-				{:else}
-					<p>
-						Die Station wurde bereits als leer gemeldet. Danke für deine Mithilfe! 🐶
-					</p>
-				{/if}
-				<button disabled={ !isFilled } on:click={() => patchStation(stationID, false)}>Station als leer melden</button>
-				<p>
-					Du kennst uns noch nicht? <a href='#/'>Hier kannst du herrausfinden was und warum.</a>
+					Die Station wurde bereits als leer gemeldet. Danke für deine Mithilfe! 🐶
 				</p>
 			{/if}
-		</Board>
+			<button disabled={ !isFilled } on:click={() => patchStation(stationID, false)}>Station als leer melden</button>
+			<p>
+				Du kennst uns noch nicht? <a href='#/'>Hier kannst du herrausfinden was und warum.</a>
+			</p>
+		{/if}
+	</Board>
 </section>
 
 <style type="text/scss">
@@ -124,7 +101,6 @@
 		
 		p {
 			text-align: center;
-
 			span {
 				color: var(--red);
 				text-transform: uppercase;
@@ -132,15 +108,9 @@
 		}
 	}
 
-	.map {
-    	height: 250px;
-    	width: 100%;
-    	margin: 0;
-
-  		background-color: var(--beige);  		
-  		border-radius: 10px;
-  		overflow: hidden;
-  	}
+	img {
+		height: 10rem;
+	}
 
   	@media (min-width: 720px) {
   		.station {
@@ -148,11 +118,5 @@
 	  			margin: 16px;
 	  		}
   		}
-
- 		.map {
- 			// max-width: 50%;
- 			height: 50vh;
- 			margin: auto;
- 		}
 	}
 </style>
