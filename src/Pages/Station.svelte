@@ -80,13 +80,11 @@
 <section class='station' transition:fade>
 		<h2>Ist die Station leer?</h2>
 
-		<Board>
-			<div class='map' transition:fade>
-				{#if station}
-					<Map options={mapOptions} />
-				{/if}
-			</div>
-		</Board>
+		<div class='map' transition:fade>
+			{#if station}
+				<Map options={mapOptions} />
+			{/if}
+		</div>
 
 		<Board>
 			{#if isLoading}

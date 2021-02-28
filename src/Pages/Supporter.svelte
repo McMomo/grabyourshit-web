@@ -26,6 +26,30 @@
 			.catch((err) => console.error('catch error on PATCH' + err))
 		}
 	}
+
+	// auth0
+
+	import { onMount } from "svelte";
+	import auth from "../authService";
+	import { isAuthenticated, user } from "../store";
+
+	let auth0Client;
+
+	onMount(async () => {
+    	auth0Client = await auth.createClient();
+
+    	isAuthenticated.set(await auth0Client.isAuthenticated());
+    	user.set(await auth0Client.getUser());
+	});
+
+	function login() {
+		auth.loginWithPopup(auth0Client);
+	}
+
+	function logout() {
+		auth.logout(auth0Client);
+	}
+
 </script>
 
 <section>
@@ -37,15 +61,27 @@
 			{#await fetch(`${Constants.API_URL}/stations/${params.id}`).then((value) => value.json()).then((json) => json)}
 				<img src='../assets/pulse-1s-200px.svg' alt='loading animation' transition:fade>
 			{:then station}
-				{#if station.isFilled && !isLoading}
-					<h3>Die Station wurde bereits aufgefüllt ✅</h3>
-					<p>Trotzdem danke für deine Angagement. Wir zählen weiterhin auf deine Unterstützung!</p>
-				{:else if isLoading}
-					<img src='../assets/pulse-1s-200px.svg' alt='loading animation' transition:fade>
+
+				<!-- Add map here -->
+
+				{#if $isAuthenticated}
+					{#if station.isFilled && !isLoading}
+						<h3>Die Station wurde bereits aufgefüllt ✅</h3>
+						<p>Trotzdem danke für deine Angagement. Wir zählen weiterhin auf deine Unterstützung!</p>
+					{:else if isLoading}
+						<img src='../assets/pulse-1s-200px.svg' alt='loading animation' transition:fade>
+					{:else}
+						<h3>Du hast die Station <span>{getAddress(station.nearestAddress)}</span> aufgefüllt?</h3>
+						<p>Bitte klicke nur auf den Button, falls du die Station schon aufgefüllt hast, danke!</p>
+						<button on:click={() => patchStation(params.id, true)}>Ich habe die Station aufgefüllt</button>
+					{/if}
 				{:else}
-					<h3>Du hast die Station <span>{getAddress(station.nearestAddress)}</span> aufgefüllt?</h3>
-					<p>Bitte klicke nur auf den Button, falls du die Station schon aufgefüllt hast, danke!</p>
-					<button on:click={() => patchStation(params.id, true)}>Ich habe die Station aufgefüllt</button>
+					<p>
+						Um die Station als aufgefüllt zu melden, logge dich bitte über den Button ein.
+					</p>
+					<button on:click={login}>
+		            	Log In 🔑
+					</button>
 				{/if}
 			{:catch}
 				<p>
