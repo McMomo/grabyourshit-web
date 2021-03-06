@@ -79,6 +79,7 @@
 	ul {
 		list-style: none;
 		text-align: left;
+		margin: auto;
 		padding: 0 8px;
 	}
 

@@ -13,6 +13,7 @@
 		display: flex;
 		flex-direction: column;
 		place-content: center;
+		place-items: center;
 		position: relative;
 
   		background-color: var(--beige);

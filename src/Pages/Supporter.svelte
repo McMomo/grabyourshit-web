@@ -15,7 +15,7 @@
 	const patchStation = async (stationID, fill) => {
 		if (stationID) {
 			isLoading = true
-			await fetch(`${Constants.API_URL}/stations/${stationID}?fill=${fill}`, {
+			await fetch(`${Constants.API_URL}/stations/${stationID}/${fill}`, {
 				method: 'PATCH'
 			})
 			.then((res) => res.json())
@@ -112,5 +112,9 @@
 
 	img {
 		height: 10rem;
+	}
+
+	button {
+		max-width: 50%;
 	}
 </style>
