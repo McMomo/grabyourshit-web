@@ -44,7 +44,10 @@
 	});
 
 	function login() {
-		auth.loginWithPopup(auth0Client);
+		auth.loginWithPopup(
+			auth0Client, 
+			{ redirect_uri:`${window.location.href}` }
+		);
 	}
 
 	function logout() {

@@ -1,6 +1,6 @@
 import createAuth0Client from "@auth0/auth0-spa-js";
 import { user, isAuthenticated, popupOpen } from "./store";
-import config from "./auth_config";
+import {config} from "./auth_config";
 
 async function createClient() {
   let auth0Client = await createAuth0Client({
@@ -12,17 +12,26 @@ async function createClient() {
 }
 
 async function loginWithPopup(client, options) {
-  popupOpen.set(true);
   try {
-    await client.loginWithPopup(options);
+    await client.loginWithRedirect(options);
 
-    user.set(await client.getUser());
-    isAuthenticated.set(true);
+    const query = window.location.search;
+    console.log(query)
+
+    if (query.includes("code=") && query.includes("state=")) {
+
+      await client.handleRedirectCallback();
+      
+      user.set(await client.getUser());
+            
+      isAuthenticated.set(true);
+
+      window.history.replaceState({}, document.title, "/");
+    }
+ 
   } catch (e) {
     // eslint-disable-next-line
     console.error(e);
-  } finally {
-    popupOpen.set(false);
   }
 }
 
