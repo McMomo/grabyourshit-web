@@ -22,6 +22,12 @@ async function loginWithRedirect(auth0Client, options) {
 async function handleRedirectOnLoad(auth0Client) {
     window.addEventListener('load', async () => {
       const redirectResult = await auth0Client.handleRedirectCallback();
+      try {
+        isAuthenticated.set(await auth0Client.isAuthenticated());
+        user.set(await auth0Client.getUser());
+      } catch (e) {
+        console.error(e)
+      }
     });
 
     try {
