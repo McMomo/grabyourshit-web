@@ -11,28 +11,25 @@ async function createClient() {
   return auth0Client;
 }
 
-async function loginWithPopup(client, options) {
+async function loginWithRedirect(auth0Client, options) {
   try {
-    await client.loginWithRedirect(options);
-
-    const query = window.location.search;
-    console.log(query)
-
-    if (query.includes("code=") && query.includes("state=")) {
-
-      await client.handleRedirectCallback();
-      
-      user.set(await client.getUser());
-            
-      isAuthenticated.set(true);
-
-      window.history.replaceState({}, document.title, "/");
-    }
- 
+    await auth0Client.loginWithRedirect(options);
   } catch (e) {
-    // eslint-disable-next-line
     console.error(e);
   }
+}
+
+async function handleRedirectOnLoad(auth0Client) {
+    window.addEventListener('load', async () => {
+      const redirectResult = await auth0Client.handleRedirectCallback();
+    });
+
+    try {
+      isAuthenticated.set(await auth0Client.isAuthenticated());
+      user.set(await auth0Client.getUser());
+    } catch (e) {
+      console.error(e)
+    }
 }
 
 function logout(client) {
@@ -41,8 +38,9 @@ function logout(client) {
 
 const auth = {
   createClient,
-  loginWithPopup,
-  logout
+  loginWithRedirect,
+  handleRedirectOnLoad,
+  logout,
 };
 
 export default auth;

@@ -1,10 +1,13 @@
 <script>
+	import { onMount } from "svelte";
 	import { fade } from 'svelte/transition'
 
 	import Board from '../Components/Board.svelte'
 	import Map from '../Components/Map.svelte'
 	import Thanks from '../Components/Thanks.svelte'
 
+	import authService from "../authService";
+	import { isAuthenticated, user } from "../store";
 	import { getAddress } from '../misc'
 	import Constants from '../config'
 
@@ -30,28 +33,24 @@
 
 	// auth0
 
-	import { onMount } from "svelte";
-	import auth from "../authService";
-	import { isAuthenticated, user } from "../store";
 
 	let auth0Client;
 
 	onMount(async () => {
-    	auth0Client = await auth.createClient();
+    	auth0Client = await authService.createClient();
 
-    	isAuthenticated.set(await auth0Client.isAuthenticated());
-    	user.set(await auth0Client.getUser());
+		await authService.handleRedirectOnLoad(auth0Client)
 	});
 
 	function login() {
-		auth.loginWithPopup(
+		authService.loginWithRedirect(
 			auth0Client, 
 			{ redirect_uri:`${window.location.href}` }
 		);
 	}
 
 	function logout() {
-		auth.logout(auth0Client);
+		authService.logout(auth0Client);
 	}
 
 </script>
