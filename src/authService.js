@@ -1,6 +1,6 @@
 import createAuth0Client from "@auth0/auth0-spa-js";
 import { user, isAuthenticated, popupOpen } from "./store";
-import config from "./auth_config";
+import {config} from "./auth_config";
 
 async function createClient() {
   let auth0Client = await createAuth0Client({
@@ -11,19 +11,31 @@ async function createClient() {
   return auth0Client;
 }
 
-async function loginWithPopup(client, options) {
-  popupOpen.set(true);
+async function loginWithRedirect(auth0Client, options) {
   try {
-    await client.loginWithPopup(options);
-
-    user.set(await client.getUser());
-    isAuthenticated.set(true);
+    await auth0Client.loginWithRedirect(options);
   } catch (e) {
-    // eslint-disable-next-line
     console.error(e);
-  } finally {
-    popupOpen.set(false);
   }
+}
+
+async function handleRedirectOnLoad(auth0Client) {
+    window.addEventListener('load', async () => {
+      const redirectResult = await auth0Client.handleRedirectCallback();
+      try {
+        isAuthenticated.set(await auth0Client.isAuthenticated());
+        user.set(await auth0Client.getUser());
+      } catch (e) {
+        console.error(e)
+      }
+    });
+
+    try {
+      isAuthenticated.set(await auth0Client.isAuthenticated());
+      user.set(await auth0Client.getUser());
+    } catch (e) {
+      console.error(e)
+    }
 }
 
 function logout(client) {
@@ -32,8 +44,9 @@ function logout(client) {
 
 const auth = {
   createClient,
-  loginWithPopup,
-  logout
+  loginWithRedirect,
+  handleRedirectOnLoad,
+  logout,
 };
 
 export default auth;
