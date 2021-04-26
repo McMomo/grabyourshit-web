@@ -5,6 +5,8 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
 import autoPreprocess from 'svelte-preprocess';
+import {config} from 'dotenv';
+import replace from '@rollup/plugin-replace'
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -45,6 +47,17 @@ export default {
 				dev: !production
 			}
 		}),
+		
+		replace({
+			// stringify the object       
+			__myapp: JSON.stringify({
+			  env: {
+				isProd: production,
+				...config().parsed // attached the .env config
+			  }
+			}),
+		}),
+
 		// we'll extract any component CSS out into
 		// a separate file - better for performance
 		css({ output: 'bundle.css' }),
